@@ -5,7 +5,7 @@ import {
   selectorsFactory,
   bindSelectorsToState
 } from "redux-manager-lib";
-import moduleRestApi from "./blog-post-rest-api";
+import moduleRestApi from "./rest-client-blog-post";
 
 /*
 ////////////////
@@ -80,7 +80,7 @@ const selectors = bindSelectorsToState(
   })
 );
 
-const BlogPost = {
+const ModelBlogPost = {
   actionTypes,
   restApi,
   actionCreators,
@@ -89,4 +89,4 @@ const BlogPost = {
   MODULE_NAME
 };
 
-export default BlogPost;
+export default ModelBlogPost;
