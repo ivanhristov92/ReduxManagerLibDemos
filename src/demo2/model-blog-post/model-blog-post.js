@@ -13,6 +13,8 @@ EXTENDED EXAMPLE
 ////////////////
 */
 
+import ModelDefinitionsModel from "../model-model-definitions";
+
 const MODEL_NAME = "BlogPost";
 
 const actionTypes = actionTypesFactory(MODEL_NAME, {
@@ -24,47 +26,22 @@ const actionTypes = actionTypesFactory(MODEL_NAME, {
 
 const restApi = moduleRestApi();
 
-const actionCreatorsOptions = {
-  additional: {
-    showAnimation() {
-      return { type: actionTypes.SHOW_ANIMATION };
-    },
-    stopShowingAnimation() {
-      return { type: actionTypes.STOP_SHOWING_ANIMATION };
-    },
-    showAnimationTemporarily() {
-      return function(dispatch) {
-        dispatch({ type: actionTypes.SHOW_ANIMATION });
-        setTimeout(() => {
-          dispatch({ type: actionTypes.STOP_SHOWING_ANIMATION });
-        }, 3000);
-      };
-    }
-  }
-};
+
 const actionCreators = actionCreatorsFactory(
   actionTypes,
-  restApi,
-  actionCreatorsOptions
+  restApi
 );
 
 const reducer = reducerFactory(actionTypes, {
   defaultState: {
-    showAnimation: "waiting..."
+      definition: null
   },
   additional: {
-    [actionTypes.SHOW_ANIMATION](state, action) {
-      console.log("ee");
+    [ModelDefinitionsModel.actionTypes.READ__SUCCESS](state, action){
       return {
-        ...state,
-        showAnimation: true
-      };
-    },
-    [actionTypes.STOP_SHOWING_ANIMATION](state, action) {
-      return {
-        ...state,
-        showAnimation: false
-      };
+          ...state,
+          definition: action.payload.byId[MODEL_NAME]
+      }
     }
   }
 });
@@ -73,8 +50,8 @@ const selectors = bindSelectorsToState(
   "blog",
   selectorsFactory({
     additional: {
-      getIsShowingAnimation(state) {
-        return state.showAnimation;
+      getDefinition(state) {
+        return state.definition;
       }
     }
   })

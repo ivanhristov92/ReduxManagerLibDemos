@@ -7,7 +7,17 @@ export function connectModel(Model, stateToProps = () => ({})) {
   let models = Array.isArray(Model) ? Model : [Model];
 
   const mapStateToProps = state => {
+
+
       return models.reduce((acc, model)=>{
+
+          if(typeof model.mapStateToProps === "function"){
+                return {
+                    ...acc,
+                    [model.model.MODEL_NAME]: model.mapStateToProps(state)
+                }
+          }
+
           return {
               ...acc,
               [model.MODEL_NAME]: {
@@ -24,7 +34,19 @@ export function connectModel(Model, stateToProps = () => ({})) {
 
   function mapDispatchToProps(dispatch, ownProps) {
 
+
       return models.reduce((acc, model)=>{
+
+          if(typeof model.model === "object"){
+              const allActionCreators = Object.assign({}, model.actionCreators);
+              const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
+              return {
+                  ...acc,
+                  [model.model.MODEL_NAME]: boundActionCreators
+              }
+          }
+
+
           const allActionCreators = Object.assign({}, model.actionCreators);
           const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
           return {

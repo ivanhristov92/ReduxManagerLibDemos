@@ -20,7 +20,7 @@ const options = {
 class ModelEntriesList extends React.Component{
 
     componentWillMount(){
-        console.log(this.props)
+        console.log(this.props);
         this.props.ModelDefinitions.read();
     }
 
@@ -66,4 +66,18 @@ class ModelEntriesList extends React.Component{
     }
 
 }
-export default connectModel([BlogPostModel, ModelDefinitionsModel])(ModelEntriesList);
+export default connectModel(
+    [
+        {
+            model: BlogPostModel,
+            mapStateToProps(state){
+                return {
+                    all: BlogPostModel.selectors.getAll(state),
+                    operationStates: BlogPostModel.selectors.getOperationStates(state)
+                }
+            }
+        },
+        ModelDefinitionsModel
+
+    ]
+)(ModelEntriesList);
