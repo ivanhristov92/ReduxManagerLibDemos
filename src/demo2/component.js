@@ -33,7 +33,32 @@ class ModelEntriesList extends React.Component{
                 columns={columns}
                 options={options}
             />
-            <div style={{padding: 40, textAlign: "center", color: "red"}}>{"" + this.props.ModelDefinitions.error || null}</div>
+
+
+                <div>
+                    <p>{this.props.ModelDefinitions.modelName}</p>
+                    <ul>
+                        <li>create: {this.props.ModelDefinitions.operationStates.create}</li>
+                        <li>read: {this.props.ModelDefinitions.operationStates.read}</li>
+                        <li>update: {this.props.ModelDefinitions.operationStates.update}</li>
+                        <li>delete: {this.props.ModelDefinitions.operationStates.delete}</li>
+                    </ul>
+                    <div>error: {"" + (this.props.ModelDefinitions.error && this.props.ModelDefinitions.error.message)}</div>
+
+                </div>
+                <hr />
+                <div>
+                    <p>{this.props.BlogPost.modelName}</p>
+                    <ul>
+                        <li>create: {this.props.BlogPost.operationStates.create}</li>
+                        <li>read: {this.props.BlogPost.operationStates.read}</li>
+                        <li>update: {this.props.BlogPost.operationStates.update}</li>
+                        <li>delete: {this.props.BlogPost.operationStates.delete}</li>
+                    </ul>
+                    <div>error: {"" + this.props.BlogPost.error}</div>
+
+                </div>
+
             </>)
 
     }
