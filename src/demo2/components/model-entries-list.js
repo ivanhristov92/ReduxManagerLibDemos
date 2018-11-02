@@ -17,7 +17,7 @@ const options = {
 export default class ModelEntriesList extends React.Component{
 
     componentWillMount(){
-        this.props.model.read();
+        // this.props.model.read();
     }
 
     render(){

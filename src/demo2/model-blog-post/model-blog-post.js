@@ -13,9 +13,9 @@ EXTENDED EXAMPLE
 ////////////////
 */
 
-const MODULE_NAME = "BlogPost";
+const MODEL_NAME = "BlogPost";
 
-const actionTypes = actionTypesFactory(MODULE_NAME, {
+const actionTypes = actionTypesFactory(MODEL_NAME, {
   additional: {
     SHOW_ANIMATION: "SHOW_ANIMATION",
     STOP_SHOWING_ANIMATION: "STOP_SHOWING_ANIMATION"
@@ -86,7 +86,8 @@ const ModelBlogPost = {
   actionCreators,
   reducer,
   selectors,
-  MODULE_NAME
+  MODEL_NAME
 };
+console.log(ModelBlogPost)
 
 export default ModelBlogPost;

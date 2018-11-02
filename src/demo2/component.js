@@ -1,6 +1,9 @@
 import React from "react"
 import MUIDataTable from "mui-datatables";
 
+import BlogPostModel from "./model-blog-post/model-blog-post";
+import ModelDefinitionsModel from "./model-model-definitions";
+import { connectModel } from "../utils";
 const columns = ["Name", "Company", "City", "State"];
 
 const data = [
@@ -14,21 +17,26 @@ const options = {
     filterType: 'checkbox',
 };
 
-export default class ModelEntriesList extends React.Component{
+class ModelEntriesList extends React.Component{
 
     componentWillMount(){
-        // this.props.model.read();
+        console.log(this.props)
+        this.props.ModelDefinitions.read();
     }
 
     render(){
         return (
+            <>
             <MUIDataTable
                 title={"Employee List"}
                 data={data}
                 columns={columns}
                 options={options}
-            />)
+            />
+            <div style={{padding: 40, textAlign: "center", color: "red"}}>{"" + this.props.ModelDefinitions.error || null}</div>
+            </>)
 
     }
 
 }
+export default connectModel([BlogPostModel, ModelDefinitionsModel])(ModelEntriesList);
