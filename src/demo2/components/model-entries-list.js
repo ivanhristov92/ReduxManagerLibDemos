@@ -1,33 +1,41 @@
-import React from "react"
+import React from "react";
 import MUIDataTable from "mui-datatables";
-
-const columns = ["Name", "Company", "City", "State"];
-
-const data = [
-    ["Joe James", "Test Corp", "Yonkers", "NY"],
-    ["John Walsh", "Test Corp", "Hartford", "CT"],
-    ["Bob Herm", "Test Corp", "Tampa", "FL"],
-    ["James Houston", "Test Corp", "Dallas", "TX"],
-];
+import * as _ from "ramda";
 
 const options = {
     filterType: 'checkbox',
 };
 
+const extractColumns = _.compose(
+    _.keys,
+    _.pathOr({}, ["definition", "BlogPost", "properties"])
+);
+
+const extractData = model => model.all.map(_.values);
+
 export default class ModelEntriesList extends React.Component{
 
     componentWillMount(){
-        // this.props.model.read();
     }
 
     render(){
+
+
+        let columns = extractColumns(this.props.model);
+
+        let data = extractData(this.props.model);
+console.log(this.props.model)
+        let title = this.props.model.MODEL_NAME;
         return (
-            <MUIDataTable
-                title={"Employee List"}
-                data={data}
-                columns={columns}
-                options={options}
-            />)
+            <>
+                <MUIDataTable
+                    title={title}
+                    data={data}
+                    columns={columns}
+                    options={options}
+                />
+
+            </>)
 
     }
 

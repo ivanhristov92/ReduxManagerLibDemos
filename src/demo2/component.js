@@ -4,80 +4,49 @@ import MUIDataTable from "mui-datatables";
 import BlogPostModel from "./model-blog-post/model-blog-post";
 import ModelDefinitionsModel from "./model-model-definitions";
 import { connectModel } from "../utils";
-const columns = ["Name", "Company", "City", "State"];
+import NewBlogPostForm from "./components/new-post-form";
+import ModelEntriesList from "./components/model-entries-list";
+import NewPostForm from "./components/new-post-form";
+import * as _ from "ramda";
 
-const data = [
-    ["Joe James", "Test Corp", "Yonkers", "NY"],
-    ["John Walsh", "Test Corp", "Hartford", "CT"],
-    ["Bob Herm", "Test Corp", "Tampa", "FL"],
-    ["James Houston", "Test Corp", "Dallas", "TX"],
-];
 
-const options = {
-    filterType: 'checkbox',
-};
-
-class ModelEntriesList extends React.Component{
+class ModelPage extends React.Component{
 
     componentWillMount(){
-        console.log(this.props);
-        this.props.ModelDefinitions.read();
+        this.props.ModelDefinitions.actionCreators.read();
+        this.props.BlogPost.actionCreators.read();
     }
 
     render(){
         return (
             <>
-            <MUIDataTable
-                title={"Employee List"}
-                data={data}
-                columns={columns}
-                options={options}
-            />
-                <div>
-
-                </div>
-
-                <div>
-                    <p>{this.props.ModelDefinitions.modelName}</p>
-                    <ul>
-                        <li>create: {this.props.ModelDefinitions.operationStates.create}</li>
-                        <li>read: {this.props.ModelDefinitions.operationStates.read}</li>
-                        <li>update: {this.props.ModelDefinitions.operationStates.update}</li>
-                        <li>delete: {this.props.ModelDefinitions.operationStates.delete}</li>
-                    </ul>
-                    <div>error: {"" + (this.props.ModelDefinitions.error && this.props.ModelDefinitions.error.message)}</div>
-
-                </div>
-                <hr />
-                <div>
-                    <p>{this.props.BlogPost.modelName}</p>
-                    <ul>
-                        <li>create: {this.props.BlogPost.operationStates.create}</li>
-                        <li>read: {this.props.BlogPost.operationStates.read}</li>
-                        <li>update: {this.props.BlogPost.operationStates.update}</li>
-                        <li>delete: {this.props.BlogPost.operationStates.delete}</li>
-                    </ul>
-                    <div>error: {"" + this.props.BlogPost.error}</div>
-
-                </div>
-
-            </>)
+              <ModelEntriesList model={this.props.BlogPost}/>
+              <NewPostForm />
+            </>
+        )
 
     }
 
 }
+
+
+const BlogPostContainer =  {
+    model: BlogPostModel,
+    mapStateToProps(state){
+        return {
+            all: BlogPostModel.selectors.getAll(state),
+            operationStates: BlogPostModel.selectors.getOperationStates(state),
+            definition: BlogPostModel.selectors.getDefinition(state),
+            error: BlogPostModel.selectors.getError(state),
+            MODEL_NAME: BlogPostModel.MODEL_NAME
+        }
+    }
+};
 export default connectModel(
     [
-        {
-            model: BlogPostModel,
-            mapStateToProps(state){
-                return {
-                    all: BlogPostModel.selectors.getAll(state),
-                    operationStates: BlogPostModel.selectors.getOperationStates(state)
-                }
-            }
-        },
+        BlogPostContainer,
         ModelDefinitionsModel
 
     ]
-)(ModelEntriesList);
+)(ModelPage);
+

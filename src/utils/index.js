@@ -1,7 +1,7 @@
 import { bindActionCreators } from "redux";
 import connect from "react-redux/es/connect/connect";
 
-export function connectModel(Model, stateToProps = () => ({})) {
+export function connectModel(Model) {
 
 
   let models = Array.isArray(Model) ? Model : [Model];
@@ -25,7 +25,6 @@ export function connectModel(Model, stateToProps = () => ({})) {
                   modelName: model.MODEL_NAME,
                   error: model.selectors.getError(state),
                   operationStates: model.selectors.getOperationStates(state),
-                  ...stateToProps(state)
               }
           }
       }, {});
@@ -38,11 +37,13 @@ export function connectModel(Model, stateToProps = () => ({})) {
       return models.reduce((acc, model)=>{
 
           if(typeof model.model === "object"){
-              const allActionCreators = Object.assign({}, model.actionCreators);
+              const allActionCreators = Object.assign({}, model.model.actionCreators);
               const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
               return {
                   ...acc,
-                  [model.model.MODEL_NAME]: boundActionCreators
+                  [model.model.MODEL_NAME]: {
+                      actionCreators: boundActionCreators
+                  }
               }
           }
 
@@ -51,14 +52,15 @@ export function connectModel(Model, stateToProps = () => ({})) {
           const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
           return {
               ...acc,
-              [model.MODEL_NAME]: boundActionCreators
+              [model.MODEL_NAME]:  {
+                  actionCreators: boundActionCreators
+              }
           }
       }, {});
   }
 
 
     function mergeProps (propsFromState, propsFromDispatch, ownProps) {
-
         function mergeInnerObjects(...args){
             let result = {};
             args.forEach(arg=>{
