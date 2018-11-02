@@ -33,7 +33,9 @@ class ModelEntriesList extends React.Component{
                 columns={columns}
                 options={options}
             />
+                <div>
 
+                </div>
 
                 <div>
                     <p>{this.props.ModelDefinitions.modelName}</p>
