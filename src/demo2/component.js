@@ -17,6 +17,11 @@ class ModelPage extends React.Component{
         openEdit: false
     };
 
+    componentWillMount(){
+        this.props.readPosts();
+    }
+
+    // layout events
     onRowsSelect = (current, selected)=>{
         this.setState({
             selected
@@ -27,17 +32,22 @@ class ModelPage extends React.Component{
         this.setState({
             openEdit: true
         })
-    }
+    };
 
-    componentWillMount(){
-        this.props.readPosts();
-    }
-
-    mapSelectedToEntries = () => {
-        return this.state.selected.map(({index})=>{
-            return this.props.allPosts[index];
+    onCancelEdit = () => {
+        this.setState({
+            openEdit: false
         })
     }
+    //////////////////////
+
+    // Action Events
+
+    onDelete = () => {
+        let entries = this.state.selected.map(s=>this.props.allPosts[s.index].id);
+        this.props.deletePosts(entries);
+    }
+
 
     render(){
         let fields = ["id", "title", "content"];
@@ -50,15 +60,11 @@ class ModelPage extends React.Component{
                     data={data}
                     onRowsSelect={this.onRowsSelect}
                     onEditClick={this.onEditClicked}
-                    onDeleteClick={(selected)=>{
-                        console.log(selected);
-                        let entries = selected.map(s=>this.props.allPosts[s.index].id);
-                        this.props.deletePosts(entries)
-                    }}
+                    onDeleteClick={this.onDelete}
                 />
                 {
                     this.state.openEdit ? (
-                        <EditBlogPostForm entries={this.mapSelectedToEntries()} error={this.props.postsError}/>
+                        <EditBlogPostForm entries={this.mapSelectedToEntries()} error={this.props.postsError} onCancelEdit={this.onCancelEdit}/>
                     ) : (
                         <NewBlogPostForm onSubmit={this.props.createPost} error={this.props.postsError}/>
                     )
@@ -68,6 +74,14 @@ class ModelPage extends React.Component{
             </>
         )
 
+    }
+
+    // Helper methods
+
+    mapSelectedToEntries = () => {
+        return this.state.selected.map(({index})=>{
+            return this.props.allPosts[index];
+        })
     }
 
 }

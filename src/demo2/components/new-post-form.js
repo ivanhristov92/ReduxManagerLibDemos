@@ -61,7 +61,7 @@ export default class NewBlogPostForm extends React.Component {
                         console.log(this)
                         this.props.onSubmit(this.state)
                     }}>
-                        Primary
+                        Create
                     </Button>
                 </div>
 

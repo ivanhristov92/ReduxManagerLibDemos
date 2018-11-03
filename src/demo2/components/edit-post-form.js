@@ -18,12 +18,11 @@ export default class EditBlogPostForm extends React.Component {
 
     setStateToFirstEntry = () => {
         if(this.props.entries.length === 1){
-
+            this.setState({
+                title: this.props.entries[0].title,
+                content: this.props.entries[0].content
+            });
         }
-        this.setState({
-            title: this.props.entries[0].title,
-            content: this.props.entries[0].content
-        });
     };
 
     resetState = () => {
@@ -65,8 +64,6 @@ export default class EditBlogPostForm extends React.Component {
         console.log(this.props.entries)
         return (
             <div style={{textAlign: "center"}}>
-                <p>aaa
-                </p>
                 <div>
                 <TextField
                     error={this.isInErrors("title")}
@@ -100,7 +97,11 @@ export default class EditBlogPostForm extends React.Component {
                         console.log(this)
                         this.props.onSubmit(this.state)
                     }}>
-                        Primary
+                        Edit
+                    </Button>
+
+                    <Button variant="outlined" color="secondary" onClick={this.props.onCancelEdit}>
+                        Cancel
                     </Button>
                 </div>
 
