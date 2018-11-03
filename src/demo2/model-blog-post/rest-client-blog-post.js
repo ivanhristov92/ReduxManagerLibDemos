@@ -82,7 +82,11 @@ export default function LoopbackUserRestApi() {
             }
         })
       }
-      return superagent.del(ROOT + `/Posts/${id}`);
+
+      return superagent.del(ROOT + `/Posts/${id}`).then(()=>{
+          let id = ids;
+          return id;
+      })
     }
   };
 }

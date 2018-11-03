@@ -4,52 +4,37 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
+import {equals} from "ramda";
 
 
 export default class ModelEntriesList extends React.Component{
 
-    state = {
-        selected: []
-    };
-
-    onRowSelect = (current, selected, self ) =>{
-        this.setState({
-            selected: selected
-        })
-    };
-
-    onDeleteClick = () => {
-        this.props.onDeleteClick(this.state.selected)
-    };
-
-
-    onEditClick = () => {
-        this.props.onEditClick(this.state.selected)
-    };
+    shouldComponentUpdate(nextProps){
+        return !equals(nextProps.data, this.props.data)
+    }
 
     render(){
-        console.log(this.state)
         const options = {
             filterType: 'checkbox',
             sort: true,
             customToolbarSelect: ()=><div style={{display: "flex"}}>
                 <Tooltip title={"opsa"}>
-                    <IconButton  onClick={this.onEditClick}>
+                    <IconButton  onClick={this.props.onEditClick}>
                         <EditIcon />
                     </IconButton>
 
                 </Tooltip>
 
                 <Tooltip title={"opsa"}>
-                    <IconButton  onClick={this.onDeleteClick}>
+                    <IconButton  onClick={this.props.onDeleteClick}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             </div>,
 
-            onRowsSelect:this.onRowSelect,
+            onRowsSelect:this.props.onRowsSelect,
 
-            onRowsDelete: console.log
+            onRowsDelete: this.props.onRowDelete,
 
         };
 
@@ -57,6 +42,8 @@ export default class ModelEntriesList extends React.Component{
         let data = this.props.data;
         let title = this.props.modelName;
 
+
+        console.log(this.state)
         return (
             <>
                 <MUIDataTable
@@ -72,49 +59,3 @@ export default class ModelEntriesList extends React.Component{
     }
 
 }
-
-
-// import React from "react";
-// import { render } from "react-dom";
-// import { makeData, Logo, Tips } from "./Utils";
-//
-// // Import React Table
-// import ReactTable from "react-table";
-// import "react-table/react-table.css";
-//
-// export default class App extends React.Component {
-//
-//     renderEditable = (cellInfo) => {
-//         return (
-//             <div
-//                 style={{ backgroundColor: "#fafafa" }}
-//                 contentEditable
-//                 suppressContentEditableWarning
-//                 onBlur={e => {
-//                     const data = [...this.props.data];
-//                     data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-//                     this.setState({ data });
-//                 }}
-//                 dangerouslySetInnerHTML={{
-//                     __html: this.props.data[cellInfo.index][cellInfo.column.id]
-//                 }}
-//             />
-//         );
-//     }
-//     render() {
-//         const { data } = this.props;
-//         return (
-//             <div>
-//
-//                 <p>{this.props.modelName}</p>
-//                 <ReactTable
-//                     data={data}
-//                     columns={this.props.columns.map(c=>({...c, Cell: this.renderEditable}))}
-//                     defaultPageSize={10}
-//                     className="-striped -highlight"
-//                 />
-//             </div>
-//         );
-//     }
-// }
-
