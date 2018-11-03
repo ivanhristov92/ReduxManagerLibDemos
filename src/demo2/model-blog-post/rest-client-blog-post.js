@@ -1,7 +1,7 @@
 import superagent from "superagent";
 import { normalize, schema } from "normalizr";
 
-import {pathOr} from "ramda";
+import { pathOr } from "ramda";
 
 const ROOT = "http://localhost:4000/api";
 
@@ -51,30 +51,29 @@ export default function LoopbackUserRestApi() {
       }
     },
     update(entry) {
-
-      if(Array.isArray(entry)){
-        return Promise.all(entry.map(ent=>{
-            return superagent
-                .put(ROOT + "/Posts")
-                .send(ent)
-          })).then(responses => {
-            let byId = responses.reduce((acc, resp)=>{
+      if (Array.isArray(entry)) {
+        return Promise.all(
+          entry.map(ent => {
+            return superagent.put(ROOT + "/Posts").send(ent);
+          })
+        )
+          .then(responses => {
+            let byId = responses.reduce((acc, resp) => {
               const normalizedData = normalize(resp.body, post);
-                return {
-                    ...acc,
-                    ...normalizedData.entities.post
-                }
+              return {
+                ...acc,
+                ...normalizedData.entities.post
+              };
             }, {});
 
             return {
               byId
-            }
-        })
-        .catch(error => {
+            };
+          })
+          .catch(error => {
             return Promise.reject(adaptErrorForReact(error));
-        });
+          });
       }
-
 
       return superagent
         .put(ROOT + "/Posts")
@@ -93,27 +92,36 @@ export default function LoopbackUserRestApi() {
     },
 
     delete(ids) {
-      if(Array.isArray(ids)){
-        return Promise.all(ids.map(id=>{
-          return superagent.del(ROOT + `/Posts/${id}`)
-        })).then((...responses)=>{
-            return {
-              ids: ids
-            }
-        })
+      if (Array.isArray(ids)) {
+        return Promise.all(
+          ids.map(id => {
+            return superagent.del(ROOT + `/Posts/${id}`);
+          })
+        ).then((...responses) => {
+          return {
+            ids: ids
+          };
+        });
       }
 
-      return superagent.del(ROOT + `/Posts/${id}`).then(()=>{
-          let id = ids;
-          return id;
-      })
+      return superagent.del(ROOT + `/Posts/${id}`).then(() => {
+        let id = ids;
+        return id;
+      });
     }
   };
 }
 
 function adaptErrorForReact(error) {
-  if (pathOr("", ["response", "body", "error", "name"], error) === "ValidationError") {
-    let messages = pathOr("", ["response", "body", "error", "details", "messages"], error);
+  if (
+    pathOr("", ["response", "body", "error", "name"], error) ===
+    "ValidationError"
+  ) {
+    let messages = pathOr(
+      "",
+      ["response", "body", "error", "details", "messages"],
+      error
+    );
     return {
       error: error,
       messages

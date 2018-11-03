@@ -26,22 +26,18 @@ const actionTypes = actionTypesFactory(MODEL_NAME, {
 
 const restApi = moduleRestApi();
 
-
-const actionCreators = actionCreatorsFactory(
-  actionTypes,
-  restApi
-);
+const actionCreators = actionCreatorsFactory(actionTypes, restApi);
 
 const reducer = reducerFactory(actionTypes, {
   defaultState: {
-      definition: null
+    definition: null
   },
   additional: {
-    [ModelDefinitionsModel.actionTypes.READ__SUCCESS](state, action){
+    [ModelDefinitionsModel.actionTypes.READ__SUCCESS](state, action) {
       return {
-          ...state,
-          definition: action.payload.byId[MODEL_NAME]
-      }
+        ...state,
+        definition: action.payload.byId[MODEL_NAME]
+      };
     }
   }
 });
@@ -65,6 +61,6 @@ const ModelBlogPost = {
   selectors,
   MODEL_NAME
 };
-console.log(ModelBlogPost)
+console.log(ModelBlogPost);
 
 export default ModelBlogPost;
