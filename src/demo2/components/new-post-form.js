@@ -22,7 +22,7 @@ export default class NewBlogPostForm extends React.Component {
 
     isInErrors = (input)=>{
         if(!this.props.error) return false;
-        return this.props.error.messages.hasOwnProperty(input);
+        return (this.props.error.messages || {}).hasOwnProperty(input);
     }
 
     render(){
@@ -76,7 +76,7 @@ export default class NewBlogPostForm extends React.Component {
 
     renderErrors = () => {
         if(!this.props.error) return null;
-        let messages = Object.entries(this.props.error.messages);
+        let messages = Object.entries(this.props.error.messages || {});
 
         return messages.map(([key, list])=>{
             return <div>
