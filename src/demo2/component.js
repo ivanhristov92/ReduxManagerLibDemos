@@ -1,27 +1,40 @@
 import React from "react"
-import MUIDataTable from "mui-datatables";
 
 import BlogPostModel from "./model-blog-post/model-blog-post";
-import ModelDefinitionsModel from "./model-model-definitions";
-import { connectModel } from "../utils";
 import NewBlogPostForm from "./components/new-post-form";
 import ModelEntriesList from "./components/model-entries-list";
-import NewPostForm from "./components/new-post-form";
-import * as _ from "ramda";
+
+import {connect} from "react-redux";
+import { bindActionCreators } from "redux";
+import {pick, values, compose} from "ramda";
 
 
 class ModelPage extends React.Component{
-
     componentWillMount(){
-        this.props.ModelDefinitions.actionCreators.read();
-        this.props.BlogPost.actionCreators.read();
+        this.props.readPosts();
     }
 
+    // render(){
+    //     let columns = [{Header: "ID", accessor: "id"}, {Header: "Title", accessor: "title"}, {Header: "Content", accessor: "content"}];
+    //     let data = this.props.allPosts;
+    //
+    //     return (
+    //         <>
+    //           <ModelEntriesList modelName={BlogPostModel.MODEL_NAME} columns={columns} data={data}/>
+    //           <NewBlogPostForm onSubmit={this.props.createPost} error={this.props.postsError}/>
+    //         </>
+    //     )
+    //
+    // }
+
     render(){
+        let fields = ["id", "title", "content"];
+        let data = this.props.allPosts.map(compose(values, pick(fields)));
+
         return (
             <>
-              <ModelEntriesList model={this.props.BlogPost}/>
-              <NewPostForm />
+                <ModelEntriesList modelName={BlogPostModel.MODEL_NAME} fields={fields} data={data}/>
+                <NewBlogPostForm onSubmit={this.props.createPost} error={this.props.postsError}/>
             </>
         )
 
@@ -29,24 +42,14 @@ class ModelPage extends React.Component{
 
 }
 
-
-const BlogPostContainer =  {
-    model: BlogPostModel,
-    mapStateToProps(state){
-        return {
-            all: BlogPostModel.selectors.getAll(state),
-            operationStates: BlogPostModel.selectors.getOperationStates(state),
-            definition: BlogPostModel.selectors.getDefinition(state),
-            error: BlogPostModel.selectors.getError(state),
-            MODEL_NAME: BlogPostModel.MODEL_NAME
-        }
-    }
-};
-export default connectModel(
-    [
-        BlogPostContainer,
-        ModelDefinitionsModel
-
-    ]
-)(ModelPage);
-
+export default connect(function mapStateToProps(state){
+    return {
+        allPosts: BlogPostModel.selectors.getAll(state),
+        postsError: BlogPostModel.selectors.getError(state)
+    };
+}, function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        readPosts: BlogPostModel.actionCreators.read,
+        createPost: BlogPostModel.actionCreators.create
+    }, dispatch);
+})(ModelPage);

@@ -12,7 +12,8 @@
     },
     "content": {
       "type": "string",
-      "required": true
+      "required": true,
+      "textarea": true
 
     }
   },

@@ -1,6 +1,8 @@
 import superagent from "superagent";
 import { normalize, schema } from "normalizr";
 
+import {pathOr} from "ramda";
+
 const ROOT = "http://localhost:4000/api";
 
 // Define a users schema
@@ -77,10 +79,8 @@ export default function LoopbackUserRestApi() {
 }
 
 function adaptErrorForReact(error) {
-  console.log(error.response.body.error.details.messages);
-
-  if (error.response.body.error.name === "ValidationError") {
-    let messages = error.response.body.error.details.messages;
+  if (pathOr("", ["response", "body", "error", "name"], error) === "ValidationError") {
+    let messages = pathOr("", ["response", "body", "error", "details", "messages"], error);
     return {
       error: error,
       messages

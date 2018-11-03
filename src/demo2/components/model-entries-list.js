@@ -1,18 +1,10 @@
 import React from "react";
 import MUIDataTable from "mui-datatables";
-import * as _ from "ramda";
 
 const options = {
     filterType: 'checkbox',
+    sort: true
 };
-
-const extractColumns = _.compose(
-    _.keys,
-    _.pathOr({}, ["definition", "BlogPost", "properties"])
-);
-
-const extractData = model => model.all.map(_.values);
-
 export default class ModelEntriesList extends React.Component{
 
     componentWillMount(){
@@ -20,12 +12,10 @@ export default class ModelEntriesList extends React.Component{
 
     render(){
 
+        let columns = this.props.fields;
+        let data = this.props.data;
+        let title = this.props.modelName;
 
-        let columns = extractColumns(this.props.model);
-
-        let data = extractData(this.props.model);
-console.log(this.props.model)
-        let title = this.props.model.MODEL_NAME;
         return (
             <>
                 <MUIDataTable
@@ -40,3 +30,49 @@ console.log(this.props.model)
     }
 
 }
+
+
+// import React from "react";
+// import { render } from "react-dom";
+// import { makeData, Logo, Tips } from "./Utils";
+//
+// // Import React Table
+// import ReactTable from "react-table";
+// import "react-table/react-table.css";
+//
+// export default class App extends React.Component {
+//
+//     renderEditable = (cellInfo) => {
+//         return (
+//             <div
+//                 style={{ backgroundColor: "#fafafa" }}
+//                 contentEditable
+//                 suppressContentEditableWarning
+//                 onBlur={e => {
+//                     const data = [...this.props.data];
+//                     data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+//                     this.setState({ data });
+//                 }}
+//                 dangerouslySetInnerHTML={{
+//                     __html: this.props.data[cellInfo.index][cellInfo.column.id]
+//                 }}
+//             />
+//         );
+//     }
+//     render() {
+//         const { data } = this.props;
+//         return (
+//             <div>
+//
+//                 <p>{this.props.modelName}</p>
+//                 <ReactTable
+//                     data={data}
+//                     columns={this.props.columns.map(c=>({...c, Cell: this.renderEditable}))}
+//                     defaultPageSize={10}
+//                     className="-striped -highlight"
+//                 />
+//             </div>
+//         );
+//     }
+// }
+
