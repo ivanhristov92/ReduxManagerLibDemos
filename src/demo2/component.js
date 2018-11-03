@@ -21,7 +21,15 @@ class ModelPage extends React.Component{
         this.props.readPosts();
     }
 
-    // layout events
+    componentDidUpdate(prevProps){
+        if(prevProps.deleteState !== this.props.deleteState){
+            if(this.props.deleteState === "SUCCESS"){
+                this.onSuccessfulDelete()
+            }
+        }
+    }
+
+    // layout events ////
     onRowsSelect = (current, selected)=>{
         this.setState({
             selected
@@ -40,14 +48,33 @@ class ModelPage extends React.Component{
         })
     }
     //////////////////////
-
-    // Action Events
+    // Action Events /////
 
     onDelete = () => {
         let entries = this.state.selected.map(s=>this.props.allPosts[s.index].id);
         this.props.deletePosts(entries);
+    };
+
+    onSuccessfulDelete = ()=>{
+        this.setState({
+            selected: []
+        })
     }
 
+    onUpdate = ({title, content}) => {
+        let entries = this.state.selected.map(s=>{
+
+            return {
+                id: this.props.allPosts[s.index].id,
+                content,
+                title
+            }
+
+        });
+        this.props.updatePosts(entries);
+    }
+
+    //////////////////////
 
     render(){
         let fields = ["id", "title", "content"];
@@ -64,7 +91,7 @@ class ModelPage extends React.Component{
                 />
                 {
                     this.state.openEdit ? (
-                        <EditBlogPostForm entries={this.mapSelectedToEntries()} error={this.props.postsError} onCancelEdit={this.onCancelEdit}/>
+                        <EditBlogPostForm onSubmit={this.onUpdate} entries={this.mapSelectedToEntries()} error={this.props.postsError} onCancelEdit={this.onCancelEdit}/>
                     ) : (
                         <NewBlogPostForm onSubmit={this.props.createPost} error={this.props.postsError}/>
                     )
@@ -76,7 +103,7 @@ class ModelPage extends React.Component{
 
     }
 
-    // Helper methods
+    // Helper methods /////
 
     mapSelectedToEntries = () => {
         return this.state.selected.map(({index})=>{
@@ -90,11 +117,13 @@ export default connect(function mapStateToProps(state){
     return {
         allPosts: BlogPostModel.selectors.getAll(state),
         postsError: BlogPostModel.selectors.getError(state),
+        deleteState: BlogPostModel.selectors.getOperationStates(state).delete
     };
 }, function mapDispatchToProps(dispatch){
     return bindActionCreators({
         readPosts: BlogPostModel.actionCreators.read,
         createPost: BlogPostModel.actionCreators.create,
-        deletePosts: BlogPostModel.actionCreators.delete
+        updatePosts: BlogPostModel.actionCreators.update,
+        deletePosts: BlogPostModel.actionCreators.delete,
     }, dispatch);
 })(ModelPage);

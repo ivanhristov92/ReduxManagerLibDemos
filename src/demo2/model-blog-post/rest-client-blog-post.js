@@ -50,12 +50,32 @@ export default function LoopbackUserRestApi() {
         };
       }
     },
-    update({ title, content, id }) {
-      if (!id) {
-        throw new TypeError(
-          "Rest api function Expected an id, but received " + id
-        );
+    update(entry) {
+
+      if(Array.isArray(entry)){
+        return Promise.all(entry.map(ent=>{
+            return superagent
+                .put(ROOT + "/Posts")
+                .send(ent)
+          })).then(responses => {
+            let byId = responses.reduce((acc, resp)=>{
+              const normalizedData = normalize(resp.body, post);
+                return {
+                    ...acc,
+                    ...normalizedData.entities.post
+                }
+            }, {});
+
+            return {
+              byId
+            }
+        })
+        .catch(error => {
+            return Promise.reject(adaptErrorForReact(error));
+        });
       }
+
+
       return superagent
         .put(ROOT + "/Posts")
         .send({ title, content, id })
