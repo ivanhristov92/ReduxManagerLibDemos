@@ -1,16 +1,57 @@
 import React from "react";
 import MUIDataTable from "mui-datatables";
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
-const options = {
-    filterType: 'checkbox',
-    sort: true
-};
+
 export default class ModelEntriesList extends React.Component{
 
-    componentWillMount(){
-    }
+    state = {
+        selected: []
+    };
+
+    onRowSelect = (current, selected, self ) =>{
+        this.setState({
+            selected: selected
+        })
+    };
+
+    onDeleteClick = () => {
+        this.props.onDeleteClick(this.state.selected)
+    };
+
+
+    onEditClick = () => {
+        this.props.onEditClick(this.state.selected)
+    };
 
     render(){
+        console.log(this.state)
+        const options = {
+            filterType: 'checkbox',
+            sort: true,
+            customToolbarSelect: ()=><div style={{display: "flex"}}>
+                <Tooltip title={"opsa"}>
+                    <IconButton  onClick={this.onEditClick}>
+                        <EditIcon />
+                    </IconButton>
+
+                </Tooltip>
+
+                <Tooltip title={"opsa"}>
+                    <IconButton  onClick={this.onDeleteClick}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Tooltip>
+            </div>,
+
+            onRowsSelect:this.onRowSelect,
+
+            onRowsDelete: console.log
+
+        };
 
         let columns = this.props.fields;
         let data = this.props.data;
@@ -19,6 +60,7 @@ export default class ModelEntriesList extends React.Component{
         return (
             <>
                 <MUIDataTable
+                    ref={(table)=>{this.table = table}}
                     title={title}
                     data={data}
                     columns={columns}

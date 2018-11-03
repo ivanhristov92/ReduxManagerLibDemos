@@ -72,8 +72,17 @@ export default function LoopbackUserRestApi() {
         });
     },
 
-    delete({ id }) {
-      return superagent.del(ROOT + `/Posts/${id}`).then(() => ({ id }));
+    delete(ids) {
+      if(Array.isArray(ids)){
+        return Promise.all(ids.map(id=>{
+          return superagent.del(ROOT + `/Posts/${id}`)
+        })).then((...responses)=>{
+            return {
+              ids: ids
+            }
+        })
+      }
+      return superagent.del(ROOT + `/Posts/${id}`);
     }
   };
 }

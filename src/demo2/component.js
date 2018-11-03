@@ -33,7 +33,20 @@ class ModelPage extends React.Component{
 
         return (
             <>
-                <ModelEntriesList modelName={BlogPostModel.MODEL_NAME} fields={fields} data={data}/>
+                <ModelEntriesList
+                    modelName={BlogPostModel.MODEL_NAME}
+                    fields={fields}
+                    data={data}
+                    onEditClick={(selected)=>{
+                        console.log(selected);
+                        let entries = selected.map(s=>data[s.index])
+                    }}
+                    onDeleteClick={(selected)=>{
+                        console.log(selected);
+                        let entries = selected.map(s=>this.props.allPosts[s.index].id);
+                        this.props.deletePosts(entries)
+                    }}
+                />
                 <NewBlogPostForm onSubmit={this.props.createPost} error={this.props.postsError}/>
             </>
         )
@@ -45,11 +58,12 @@ class ModelPage extends React.Component{
 export default connect(function mapStateToProps(state){
     return {
         allPosts: BlogPostModel.selectors.getAll(state),
-        postsError: BlogPostModel.selectors.getError(state)
+        postsError: BlogPostModel.selectors.getError(state),
     };
 }, function mapDispatchToProps(dispatch){
     return bindActionCreators({
         readPosts: BlogPostModel.actionCreators.read,
-        createPost: BlogPostModel.actionCreators.create
+        createPost: BlogPostModel.actionCreators.create,
+        deletePosts: BlogPostModel.actionCreators.delete
     }, dispatch);
 })(ModelPage);
