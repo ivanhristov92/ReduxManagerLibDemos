@@ -10,6 +10,7 @@ import { bindActionCreators } from "redux";
 import { pick, values, compose } from "ramda";
 
 import AppBar from "./components/app-bar";
+import Instructions from "./components/instructions";
 
 class ModelPage extends React.Component {
   state = {
@@ -85,6 +86,9 @@ class ModelPage extends React.Component {
     return (
       <>
         <AppBar />
+
+        <Instructions />
+
         <div id={"model-wrapper"}>
           <ModelEntriesList
             modelName={BlogPostModel.MODEL_NAME}
