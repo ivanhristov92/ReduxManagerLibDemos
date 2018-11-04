@@ -8,13 +8,11 @@ import { combineReducers } from "redux";
 
 import Demo from "./component";
 import BlogPostModel from "./model-blog-post/model-blog-post";
-import ModelDefinitionsModel from "./model-model-definitions";
 
 import { attachAnUnexpectedErrorLogger } from "redux-manager-lib";
 
 const reducers = combineReducers({
-  blog: BlogPostModel.reducer,
-  modelDefinitions: ModelDefinitionsModel.reducer
+  blog: BlogPostModel.reducer
 });
 
 const store = createStore(

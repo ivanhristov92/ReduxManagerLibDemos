@@ -7,14 +7,6 @@ import {
 } from "redux-manager-lib";
 import moduleRestApi from "./rest-client-blog-post";
 
-/*
-////////////////
-EXTENDED EXAMPLE
-////////////////
-*/
-
-import ModelDefinitionsModel from "../model-model-definitions";
-
 const MODEL_NAME = "BlogPost";
 
 const actionTypes = actionTypesFactory(MODEL_NAME, {
@@ -28,30 +20,9 @@ const restApi = moduleRestApi();
 
 const actionCreators = actionCreatorsFactory(actionTypes, restApi);
 
-const reducer = reducerFactory(actionTypes, {
-  defaultState: {
-    definition: null
-  },
-  additional: {
-    [ModelDefinitionsModel.actionTypes.READ__SUCCESS](state, action) {
-      return {
-        ...state,
-        definition: action.payload.byId[MODEL_NAME]
-      };
-    }
-  }
-});
+const reducer = reducerFactory(actionTypes);
 
-const selectors = bindSelectorsToState(
-  "blog",
-  selectorsFactory({
-    additional: {
-      getDefinition(state) {
-        return state.definition;
-      }
-    }
-  })
-);
+const selectors = bindSelectorsToState("blog", selectorsFactory());
 
 const ModelBlogPost = {
   actionTypes,

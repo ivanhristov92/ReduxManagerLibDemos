@@ -11,6 +11,7 @@ import { pick, values, compose } from "ramda";
 
 import AppBar from "./components/app-bar";
 import Instructions from "./components/instructions";
+import CodeSnippets from "./components/code-snippets";
 
 class ModelPage extends React.Component {
   state = {
