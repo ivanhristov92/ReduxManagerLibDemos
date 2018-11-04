@@ -5,11 +5,12 @@ import { pathOr } from "ramda";
 
 const ROOT = "http://localhost:4000/api";
 
-// Define a users schema
 const post = new schema.Entity(
   "post",
   {},
   {
+    // Optional. Just to show where data transformation
+    // can be done
     processStrategy: (entity, parent, key) => {
       return {
         title: entity.title,
@@ -21,96 +22,94 @@ const post = new schema.Entity(
 );
 const arrayOfPosts = [post];
 
-export default function LoopbackUserRestApi() {
-  return {
-    create(payload) {
-      return superagent
-        .post(ROOT + "/Posts")
-        .send(payload)
-        .then(response => {
-          return shape(response);
-        })
-        .catch(function(response) {
-          let adaptedError = adaptErrorForReact(response);
-          return Promise.reject(adaptedError);
-        });
-      function shape(response) {
-        const normalizedData = normalize(response.body, post);
-        return { byId: normalizedData.entities.post };
-      }
-    },
-    read() {
-      return superagent.get(ROOT + "/Posts").then(response => {
+export default {
+  create(payload) {
+    return superagent
+      .post(ROOT + "/Posts")
+      .send(payload)
+      .then(response => {
         return shape(response);
+      })
+      .catch(function(response) {
+        let adaptedError = adaptErrorForReact(response);
+        return Promise.reject(adaptedError);
       });
-      function shape(response) {
-        const normalizedData = normalize(response.body, arrayOfPosts);
-        return {
-          byId: normalizedData.entities.post
-        };
-      }
-    },
-    update(entry) {
-      if (Array.isArray(entry)) {
-        return Promise.all(
-          entry.map(ent => {
-            return superagent.put(ROOT + "/Posts").send(ent);
-          })
-        )
-          .then(responses => {
-            let byId = responses.reduce((acc, resp) => {
-              const normalizedData = normalize(resp.body, post);
-              return {
-                ...acc,
-                ...normalizedData.entities.post
-              };
-            }, {});
-
+    function shape(response) {
+      const normalizedData = normalize(response.body, post);
+      return { byId: normalizedData.entities.post };
+    }
+  },
+  read() {
+    return superagent.get(ROOT + "/Posts").then(response => {
+      return shape(response);
+    });
+    function shape(response) {
+      const normalizedData = normalize(response.body, arrayOfPosts);
+      return {
+        byId: normalizedData.entities.post
+      };
+    }
+  },
+  update(entry) {
+    if (Array.isArray(entry)) {
+      return Promise.all(
+        entry.map(ent => {
+          return superagent.put(ROOT + "/Posts").send(ent);
+        })
+      )
+        .then(responses => {
+          let byId = responses.reduce((acc, resp) => {
+            const normalizedData = normalize(resp.body, post);
             return {
-              byId
+              ...acc,
+              ...normalizedData.entities.post
             };
-          })
-          .catch(error => {
-            return Promise.reject(adaptErrorForReact(error));
-          });
-      }
+          }, {});
 
-      return superagent
-        .put(ROOT + "/Posts")
-        .send({ title, content, id })
-        .then(response => {
-          return shape(response);
-
-          function shape(response) {
-            const normalizedData = normalize(response.body, post);
-            return { byId: normalizedData.entities.post };
-          }
+          return {
+            byId
+          };
         })
         .catch(error => {
           return Promise.reject(adaptErrorForReact(error));
         });
-    },
+    }
 
-    delete(ids) {
-      if (Array.isArray(ids)) {
-        return Promise.all(
-          ids.map(id => {
-            return superagent.del(ROOT + `/Posts/${id}`);
-          })
-        ).then((...responses) => {
-          return {
-            ids: ids
-          };
-        });
-      }
+    return superagent
+      .put(ROOT + "/Posts")
+      .send({ title, content, id })
+      .then(response => {
+        return shape(response);
 
-      return superagent.del(ROOT + `/Posts/${id}`).then(() => {
-        let id = ids;
-        return id;
+        function shape(response) {
+          const normalizedData = normalize(response.body, post);
+          return { byId: normalizedData.entities.post };
+        }
+      })
+      .catch(error => {
+        return Promise.reject(adaptErrorForReact(error));
+      });
+  },
+
+  delete(ids) {
+    if (Array.isArray(ids)) {
+      return Promise.all(
+        ids.map(id => {
+          return superagent.del(ROOT + `/Posts/${id}`);
+        })
+      ).then((...responses) => {
+        return {
+          ids: ids
+        };
       });
     }
-  };
-}
+
+    return superagent.del(ROOT + `/Posts/${id}`).then(() => {
+      let id = ids;
+      return id;
+    });
+  }
+};
 
 function adaptErrorForReact(error) {
   if (

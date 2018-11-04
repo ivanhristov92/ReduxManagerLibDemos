@@ -9,14 +9,9 @@ import moduleRestApi from "./rest-client-blog-post";
 
 const MODEL_NAME = "BlogPost";
 
-const actionTypes = actionTypesFactory(MODEL_NAME, {
-  additional: {
-    SHOW_ANIMATION: "SHOW_ANIMATION",
-    STOP_SHOWING_ANIMATION: "STOP_SHOWING_ANIMATION"
-  }
-});
+const actionTypes = actionTypesFactory(MODEL_NAME);
 
-const restApi = moduleRestApi();
+const restApi = moduleRestApi;
 
 const actionCreators = actionCreatorsFactory(actionTypes, restApi);
 
