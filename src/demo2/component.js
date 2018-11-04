@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { pick, values, compose } from "ramda";
 
+import AppBar from "./components/app-bar";
+
 class ModelPage extends React.Component {
   state = {
     selected: [],
@@ -82,27 +84,30 @@ class ModelPage extends React.Component {
     );
     return (
       <>
-        <ModelEntriesList
-          modelName={BlogPostModel.MODEL_NAME}
-          fields={fields}
-          data={data}
-          onRowsSelect={this.onRowsSelect}
-          onEditClick={this.onEditClicked}
-          onDeleteClick={this.onDelete}
-        />
-        {this.state.openEdit ? (
-          <EditBlogPostForm
-            onSubmit={this.onUpdate}
-            entries={this.mapSelectedToEntries()}
-            error={this.props.postsError}
-            onCancelEdit={this.onCancelEdit}
+        <AppBar />
+        <div id={"model-wrapper"}>
+          <ModelEntriesList
+            modelName={BlogPostModel.MODEL_NAME}
+            fields={fields}
+            data={data}
+            onRowsSelect={this.onRowsSelect}
+            onEditClick={this.onEditClicked}
+            onDeleteClick={this.onDelete}
           />
-        ) : (
-          <NewBlogPostForm
-            onSubmit={this.props.createPost}
-            error={this.props.postsError}
-          />
-        )}
+          {this.state.openEdit ? (
+            <EditBlogPostForm
+              onSubmit={this.onUpdate}
+              entries={this.mapSelectedToEntries()}
+              error={this.props.postsError}
+              onCancelEdit={this.onCancelEdit}
+            />
+          ) : (
+            <NewBlogPostForm
+              onSubmit={this.props.createPost}
+              error={this.props.postsError}
+            />
+          )}
+        </div>
       </>
     );
   }
