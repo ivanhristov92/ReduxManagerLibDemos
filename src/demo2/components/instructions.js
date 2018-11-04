@@ -17,6 +17,10 @@ const styles = theme => ({
   }
 });
 
+const P = props => {
+  return <p class="rml-paragraph">{props.children}</p>;
+};
+
 function SimpleExpansionPanel(props) {
   const { classes } = props;
   return (
@@ -24,34 +28,36 @@ function SimpleExpansionPanel(props) {
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>
-            <p>
+            <P>
               This app demonstrates the usage of{" "}
               <a href={"#"}>ReduxManagerLib</a>. {"\n"}
-            </p>
-            <p>
+            </P>
+            <P>
               In the example you'll see a UI that supports the <b>basic CRUD</b>{" "}
               operations. In this case a simplistic "BlogPost" model is used.
-            </p>
+            </P>
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
-            <p>New entries can be created with the form on the bottom.</p>
+            <P>
+              <b>C </b> New entries can be created with the form on the bottom.
+            </P>
 
-            <p>
-              The app <i>reads</i> all the entries on load.
-            </p>
+            <P>
+              <b>R </b> The app <i>reads</i> all the entries on load.
+            </P>
 
-            <p>
-              To <i>update</i> an entry or to bulk <i>update</i>, select as many
-              of them as you like and open the "edit form", from the controls
-              that will appear.
-            </p>
+            <P>
+              <b>U </b> To <i>update</i> an entry or to bulk <i>update</i>,
+              select as many of them as you like and open the "edit form", from
+              the controls that will appear.
+            </P>
 
-            <p>
-              Selection one or more entries also allows you to <i>delete</i>{" "}
-              them.
-            </p>
+            <P>
+              <b>D </b> Selection one or more entries also allows you to{" "}
+              <i>delete</i> them.
+            </P>
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>

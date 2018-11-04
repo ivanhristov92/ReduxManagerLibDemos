@@ -5,13 +5,11 @@ body {
     margin: 0;
 }
 #app {
-    display: flex;
-    flex-direction: column;
 }
 
 #model-wrapper {
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
+}
+
+.rml-paragraph {
+    margin-bottom: 0;
 }
