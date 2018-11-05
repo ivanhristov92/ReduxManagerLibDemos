@@ -12,7 +12,7 @@ body {
     padding: 20px;
 }
 
-.new-post-form-wrapper, edit-post-form-wrapper {
+.new-post-form-wrapper, .edit-post-form-wrapper {
     padding: 20px 0;
     text-align: center;
 }
