@@ -1,42 +1,41 @@
-const webpack = require('webpack');
-const convert = require('koa-connect');
-const history = require('connect-history-api-fallback');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const commonPaths = require('./paths');
+const webpack = require("webpack");
+const convert = require("koa-connect");
+const history = require("connect-history-api-fallback");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const commonPaths = require("./paths");
 
 module.exports = {
   entry: commonPaths.entryPath,
   module: {
     rules: [
-
       {
         test: /\.(js|jsx)$/,
-        loader: 'babel-loader',
-        exclude: /(node_modules)/,
+        loader: "babel-loader",
+        exclude: /(node_modules)/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              outputPath: commonPaths.imagesFolder,
-            },
-          },
-        ],
+              outputPath: commonPaths.imagesFolder
+            }
+          }
+        ]
       },
       {
         test: /\.(woff2|ttf|woff|eot)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              outputPath: commonPaths.fontsFolder,
-            },
-          },
-        ],
-      },
-    ],
+              outputPath: commonPaths.fontsFolder
+            }
+          }
+        ]
+      }
+    ]
   },
   serve: {
     add: app => {
@@ -44,18 +43,18 @@ module.exports = {
     },
     content: commonPaths.entryPath,
     dev: {
-      publicPath: commonPaths.outputPath,
+      publicPath: commonPaths.outputPath
     },
-    open: true,
+    open: true
   },
   resolve: {
-    modules: ['src', 'node_modules'],
-    extensions: ['*', '.js', '.jsx', '.css', '.scss'],
+    modules: ["src", "node_modules"],
+    extensions: ["*", ".js", ".jsx", ".css", ".scss"]
   },
   plugins: [
     new webpack.ProgressPlugin(),
     new HtmlWebpackPlugin({
-      template: commonPaths.templatePath,
-    }),
-  ],
+      template: commonPaths.templatePath
+    })
+  ]
 };
