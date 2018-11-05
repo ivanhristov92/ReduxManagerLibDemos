@@ -42,7 +42,7 @@ export default class ModelEntriesList extends React.Component {
 
     console.log(this.state);
     return (
-      <>
+      <div className="model-list-wrapper">
         <MUIDataTable
           ref={table => {
             this.table = table;
@@ -52,7 +52,7 @@ export default class ModelEntriesList extends React.Component {
           columns={columns}
           options={options}
         />
-      </>
+      </div>
     );
   }
 }

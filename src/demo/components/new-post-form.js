@@ -24,8 +24,7 @@ export default class NewBlogPostForm extends React.Component {
 
   render() {
     return (
-      <div style={{ textAlign: "center" }}>
-        <p />
+      <div className="new-post-form-wrapper">
         <div>
           <TextField
             error={this.isInErrors("title")}

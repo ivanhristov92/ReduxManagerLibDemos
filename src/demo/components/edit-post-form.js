@@ -59,7 +59,7 @@ export default class EditBlogPostForm extends React.Component {
   render() {
     console.log(this.props.entries);
     return (
-      <div style={{ textAlign: "center" }}>
+      <div className={"edit-post-form-wrapper"}>
         <div>
           <TextField
             error={this.isInErrors("title")}

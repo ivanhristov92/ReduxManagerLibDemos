@@ -12,6 +12,7 @@ import { pick, values, compose } from "ramda";
 import AppBar from "./components/app-bar";
 import Instructions from "./components/instructions";
 import CodeSnippets from "./components/code-snippets";
+import Paper from "@material-ui/core/Paper";
 
 class ModelPage extends React.Component {
   state = {

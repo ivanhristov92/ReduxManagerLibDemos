@@ -1,6 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
+import Paper from "@material-ui/core/Paper";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
@@ -9,29 +15,17 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 
-const styles = theme => ({
-  root: {
-    width: "100%"
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+class Page1 extends React.Component {
+  componentDidMount() {
+    Prism.highlightAll();
   }
-});
 
-function SimpleExpansionPanel(props) {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Model Definition</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            <pre>
-              <code className={"language-js"}>
-                {`
+  render() {
+    return (
+      <Paper>
+        <pre className={"no-margin"}>
+          <code className={"language-js"}>
+            {`
 import {
   actionTypesFactory,
   actionCreatorsFactory,
@@ -66,21 +60,23 @@ console.log(ModelBlogPost);
 export default ModelBlogPost;
 
                   `}
-              </code>
-            </pre>
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+          </code>
+        </pre>
+      </Paper>
+    );
+  }
+}
 
-      <ExpansionPanel>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Rest Client</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            <pre>
-              <code className={"language-js"}>
-                {`
+class Page2 extends React.Component {
+  componentDidMount() {
+    Prism.highlightAll();
+  }
+
+  render() {
+    return (
+      <pre className={"no-margin"}>
+        <code className={"language-js"}>
+          {`
 import superagent from "superagent";
 import { normalize, schema } from "normalizr";
 
@@ -214,23 +210,22 @@ function adaptErrorForReact(error) {
 
 
                   `}
-              </code>
-            </pre>
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </code>
+      </pre>
+    );
+  }
+}
 
-      <ExpansionPanel>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>
-            Connection With <b>React</b>
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            <pre>
-              <code className={"language-js"}>
-                {`
+class Page3 extends React.Component {
+  componentDidMount() {
+    Prism.highlightAll();
+  }
+
+  render() {
+    return (
+      <pre className={"no-margin"}>
+        <code className={"language-js"}>
+          {`
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -267,17 +262,86 @@ export default connect(
 )(ModelPage);
 
                   `}
-              </code>
-            </pre>
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    </div>
-  );
+        </code>
+      </pre>
+    );
+  }
 }
-//
-SimpleExpansionPanel.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
-export default withStyles(styles)(SimpleExpansionPanel);
+class CodeSnippets extends React.Component {
+  state = {
+    open: 0
+  };
+
+  handleChange = open => {
+    this.setState({ open });
+  };
+
+  render() {
+    let { open } = this.state;
+
+    return (
+      <div className={"code-section-wrapper"}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Code</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <div className={"code-section-internal-wrapper"}>
+              <div className={"code-section-menu-wrapper"}>
+                <Divider />
+
+                <List>
+                  <ListItem
+                    button
+                    selected={open === 0}
+                    key={"Model Definition"}
+                    onClick={() => this.handleChange(0)}
+                  >
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Model Definition"} />
+                  </ListItem>
+
+                  <ListItem
+                    selected={open === 1}
+                    button
+                    key={"Rest Client"}
+                    onClick={() => this.handleChange(1)}
+                  >
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Rest Client"} />
+                  </ListItem>
+
+                  <ListItem
+                    selected={open === 2}
+                    button
+                    key={`With React`}
+                    onClick={() => this.handleChange(2)}
+                  >
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={`With React`} />
+                  </ListItem>
+                </List>
+                <Divider />
+              </div>
+
+              <div className={"code-section-code-wrapper"}>
+                {open === 0 && <Page1 />}
+                {open === 1 && <Page2 />}
+                {open === 2 && <Page3 />}
+              </div>
+            </div>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </div>
+    );
+  }
+}
+
+export default CodeSnippets;
