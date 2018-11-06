@@ -1,73 +1,74 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { Paper } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
+import RichText from "./rich-text";
+import { Value } from "slate";
+import { initialValue } from "./serializers";
+import { html } from "./serializers";
+import Plain from "slate-plain-serializer";
 
 export default class NewBlogPostForm extends React.Component {
   state = {
     title: "",
-    content: ""
+    content: Value.fromJSON(initialValue) //Value.fromJSON(initialValue)
   };
 
-  handleChange = name => {
-    return e => {
-      this.setState({
-        [name]: e.target.value
-      });
+  ///////////////////////
+  // ____Rich Text______
+  ///////////////////////
+  onContentChange = ({ value }) => {
+    this.setState({ content: value });
+  };
+
+  // ==== Rich Text ====
+  ///////////////////////
+
+  ///////////////////////
+  // ___Title Field_____
+  ///////////////////////
+  onTitleChange = e => {
+    this.setState({
+      title: e.target.value
+    });
+  };
+  // === Title Field ====
+  ///////////////////////
+
+  create = () => {
+    let payload = {
+      content: JSON.stringify(this.state.content.toJSON()),
+      title: this.state.title
     };
+    console.log(JSON.stringify(this.state.content.toJSON()));
+    this.props.onSubmit(payload);
   };
-
-  isInErrors = input => {
-    if (!this.props.error) return false;
-    return (this.props.error.messages || {}).hasOwnProperty(input);
-  };
-
   render() {
     return (
       <div className="new-post-form-wrapper">
-        <div>
+        <div className={"new-post-title-wrapper"}>
           <TextField
-            error={this.isInErrors("title")}
-            id="title"
-            label="Title"
-            margin="normal"
-            variant="outlined"
-            ref={el => {
-              this.title = el;
-            }}
-            onChange={this.handleChange("title")}
+            className={"new-post-title"}
+            placeholder={"Post Title"}
+            onChange={this.onTitleChange}
+            value={this.state.title}
           />
         </div>
-        <div>
-          <TextField
-            error={this.isInErrors("content")}
-            id="content"
-            label="Content"
-            multiline
-            rowsMax="10"
-            margin="normal"
-            variant="outlined"
-            ref={el => {
-              this.content = el;
-            }}
-            onChange={this.handleChange("content")}
+        <Paper>
+          <RichText
+            onChange={this.onContentChange}
+            onKeyDown={this.onContentKeyDown}
+            renderNode={this.renderNode}
+            renderMark={this.renderMark}
+            value={this.state.content}
           />
-        </div>
-
-        <div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              console.log(this);
-              this.props.onSubmit(this.state);
-            }}
-          >
-            Create
-          </Button>
-        </div>
-
-        <div>{this.renderErrors()}</div>
+          <div className={"create-button-wrapper"}>
+            <Button variant="contained" color="primary" onClick={this.create}>
+              Create
+            </Button>
+          </div>
+        </Paper>
       </div>
     );
   }
@@ -91,5 +92,10 @@ export default class NewBlogPostForm extends React.Component {
         </div>
       );
     });
+  };
+
+  isInErrors = input => {
+    if (!this.props.error) return false;
+    return (this.props.error.messages || {}).hasOwnProperty(input);
   };
 }

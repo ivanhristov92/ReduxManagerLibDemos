@@ -13,6 +13,9 @@ import AppBar from "./components/app-bar";
 import Instructions from "./components/instructions";
 import CodeSnippets from "./components/code-snippets";
 import Paper from "@material-ui/core/Paper";
+import Plain from "slate-plain-serializer";
+import { Value } from "slate";
+import { html } from "./components/serializers";
 
 class ModelPage extends React.Component {
   state = {
@@ -82,9 +85,16 @@ class ModelPage extends React.Component {
     let data = this.props.allPosts.map(
       compose(
         values,
+        obj => {
+          return {
+            ...obj,
+            content: Plain.serialize(Value.fromJSON(JSON.parse(obj.content)))
+          };
+        },
         pick(fields)
       )
     );
+    console.log(data);
     return (
       <>
         <AppBar />

@@ -14,7 +14,18 @@ body {
 
 .new-post-form-wrapper, .edit-post-form-wrapper {
     padding: 20px 0;
+}
+
+.new-post-form-wrapper .create-button-wrapper {
     text-align: center;
+    padding: 20px;
+}
+
+.new-post-title-wrapper {
+    padding: 20px 0;
+}
+.new-post-title {
+    width: 100%;
 }
 
 .model-list-wrapper {
