@@ -67,3 +67,8 @@ body {
         width: 100%;
     }
 }
+
+.error-messages-wrapper {
+    text-align: center;
+    padding-bottom: 20px;
+}

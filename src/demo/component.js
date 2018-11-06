@@ -67,6 +67,12 @@ class ModelPage extends React.Component {
     });
   };
 
+  onSuccessfulCreate = () => {
+    this.setState({
+      selected: []
+    });
+  };
+
   onUpdate = ({ title, content }) => {
     let entries = this.state.selected.map(s => {
       return {
@@ -121,6 +127,7 @@ class ModelPage extends React.Component {
             <NewBlogPostForm
               onSubmit={this.props.createPost}
               error={this.props.postsError}
+              createState={this.props.createState}
             />
           )}
         </div>
@@ -143,7 +150,8 @@ export default connect(
     return {
       allPosts: BlogPostModel.selectors.getAll(state),
       postsError: BlogPostModel.selectors.getError(state),
-      deleteState: BlogPostModel.selectors.getOperationStates(state).delete
+      deleteState: BlogPostModel.selectors.getOperationStates(state).delete,
+      createState: BlogPostModel.selectors.getOperationStates(state).create
     };
   },
   function mapDispatchToProps(dispatch) {

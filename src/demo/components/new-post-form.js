@@ -15,6 +15,20 @@ export default class NewBlogPostForm extends React.Component {
     content: Value.fromJSON(initialValue) //Value.fromJSON(initialValue)
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.createState !== this.props.createState) {
+      if (this.props.createState === "SUCCESS") {
+        this.resetState();
+      }
+    }
+  }
+
+  resetState = () => {
+    this.setState({
+      title: "",
+      content: Value.fromJSON(initialValue)
+    });
+  };
   ///////////////////////
   // ____Rich Text______
   ///////////////////////
@@ -68,6 +82,7 @@ export default class NewBlogPostForm extends React.Component {
               Create
             </Button>
           </div>
+          {this.renderErrors()}
         </Paper>
       </div>
     );
@@ -79,7 +94,7 @@ export default class NewBlogPostForm extends React.Component {
 
     return messages.map(([key, list]) => {
       return (
-        <div>
+        <div className={"error-messages-wrapper"}>
           {list.map(l => {
             return (
               <Chip
